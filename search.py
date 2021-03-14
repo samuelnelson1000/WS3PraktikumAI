@@ -17,18 +17,23 @@
 import queue
 
 def search(maze):
-	path = []
-	current = ()
-	current = maze.getStart()
-	row,col = current
-	path.append(current)
-	a = maze.getNeighbors(row,col)
-	path.append(a[0])
-	i = 1
-	while ( (i < 10) and (not maze.isObjective(row,col))):
-		current = maze.getNeighbors(row,col)
-		row,col = current[0]
-		path.append(current[0])
-		i = i + 1
+	fringe = queue.Queue()
+	fringe.put(maze.getStart())
+	explored = []
+	parent = {}
+	i = 0
+	while (i < 20) and (not fringe.empty()):
+		current = fringe.get()
+		explored.append(current)
+		row,col = current
+		if maze.isObjective(row,col):
+			return (parent)
+		#lakukan ekspansi
+		expand = maze.getNeighbors(row,col)
+		for child in expand:
+			if maze.isValidMove(child[0],child[1]):
+				fringe.put(child)
+				parent[child] = current
+		i = i + 1		
 
-	return path
+	return parent
